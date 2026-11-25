@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbd9e1">
+<title>Baharım için ❤️</title>
+<style>
+/* ===== RENKLER ===== */
+:root{
+  --pink:#f9d6de; --rose:#ef9db3; --bordo:#7b1e3a; --bordo2:#9c2a4c;
+  --cream:#fff6ec; --white:#fff; --serif:Georgia,"Palatino Linotype",Palatino,"Times New Roman",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden}
+body{
+  font-family:var(--serif);color:var(--bordo);
+  background:radial-gradient(120% 90% at 50% 0%,var(--cream) 0%,var(--pink) 70%,#f4bfcc 100%);
+  background-attachment:fixed;
+}
+#bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.fl{position:absolute;bottom:-12%;will-change:transform,opacity;opacity:0;
+  animation:floatUp linear infinite}
+@keyframes floatUp{
+  0%{transform:translate3d(0,0,0) rotate(0);opacity:0}
+  10%{opacity:var(--o,.5)}
+  90%{opacity:var(--o,.5)}
+  100%{transform:translate3d(var(--dx,20px),-115vh,0) rotate(var(--r,30deg));opacity:0}
+}
+.tw{position:absolute;color:#fff;text-shadow:0 0 8px #fff,0 0 14px var(--rose);animation:twinkle 3.2s ease-in-out infinite;opacity:0}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:.95;transform:scale(1)}}
+
+/* ===== EKRANLAR ===== */
+.screen{position:relative;z-index:1;min-height:100vh;min-height:100dvh;width:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:max(28px,env(safe-area-inset-top)) 22px max(28px,env(safe-area-inset-bottom));
+  transition:opacity .8s ease}
+.screen.hide{opacity:0;pointer-events:none}
+#s2{display:none}
+.inner{width:100%;max-width:440px}
+.rv{opacity:0;animation:rv 1.2s ease forwards}
+@keyframes rv{from{opacity:0;filter:blur(6px)}to{opacity:1;filter:blur(0)}}
+
+h1{font-style:italic;font-weight:400;font-size:clamp(2.6rem,13vw,4.2rem);line-height:1.05;color:var(--bordo);
+  text-shadow:0 2px 18px rgba(255,255,255,.9)}
+.name-in{opacity:0;animation:nameIn 2s cubic-bezier(.2,.8,.2,1) .3s forwards}
+@keyframes nameIn{from{opacity:0;letter-spacing:.35em;filter:blur(10px)}to{opacity:1;letter-spacing:.01em;filter:blur(0)}}
+.lead{margin-top:18px;font-size:1.08rem;line-height:1.65;color:var(--bordo2)}
+.lead b{display:block;font-weight:400;font-style:italic;font-size:1.2rem;margin-bottom:8px}
+#q{margin-top:26px;font-size:clamp(1.45rem,6.6vw,1.9rem);line-height:1.3;font-style:italic;color:var(--bordo);min-height:4.2em;
+  display:flex;align-items:center;justify-content:center}
+#q span{display:block;animation:swap .7s ease}
+@keyframes swap{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ===== BUTONLAR ===== */
+.choices{margin-top:18px;width:100%;display:flex;flex-direction:column;align-items:center;gap:16px;min-height:150px}
+.btn{font-family:var(--serif);border:0;cursor:pointer;border-radius:999px;max-width:100%;
+  transition:font-size .8s cubic-bezier(.2,.8,.2,1),padding .8s cubic-bezier(.2,.8,.2,1),opacity .8s,width .8s cubic-bezier(.2,.8,.2,1);
+  touch-action:manipulation}
+.yes{font-size:1.15rem;padding:16px 40px;color:#fff;font-weight:700;
+  background:linear-gradient(135deg,var(--bordo2),var(--bordo));box-shadow:0 8px 24px rgba(123,30,58,.35);
+  animation:beat 2.4s ease-in-out infinite}
+@keyframes beat{0%,100%{box-shadow:0 8px 24px rgba(123,30,58,.35)}50%{box-shadow:0 8px 34px rgba(156,42,76,.6)}}
+.no{font-size:1rem;padding:13px 30px;color:var(--bordo);background:rgba(255,255,255,.75);
+  box-shadow:0 4px 14px rgba(123,30,58,.15)}
+.choices[data-stage="1"] .yes{font-size:1.45rem;padding:22px 50px}
+.choices[data-stage="1"] .no{font-size:.9rem;padding:11px 24px}
+.choices[data-stage="2"] .yes{font-size:1.85rem;padding:30px 20px;width:min(100%,330px)}
+.choices[data-stage="2"] .no{font-size:.75rem;padding:8px 16px;opacity:.7}
+.choices[data-stage="3"] .yes{font-size:2.3rem;padding:46px 16px;width:100%}
+.choices[data-stage="3"] .no{font-size:.55rem;padding:4px 9px;opacity:.4}
+/* 4. aşama: EVET ekranı kaplar, HAYIR yok olur */
+.choices[data-stage="4"] .no{display:none}
+.choices[data-stage="4"] .yes{position:fixed;inset:0;z-index:50;width:100%;border-radius:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  padding:30px 26px;font-size:clamp(2.6rem,15vw,4.5rem);animation:fillIn 1s cubic-bezier(.2,.8,.2,1) forwards,beat 2.4s ease-in-out 1s infinite;
+  background:radial-gradient(circle at 50% 50%,var(--bordo2),var(--bordo))}
+.yes-msg{display:none;font-size:clamp(1.1rem,5vw,1.5rem);font-weight:400;font-style:italic;line-height:1.4;max-width:380px;opacity:.95}
+.choices[data-stage="4"] .yes-msg{display:block}
+@keyframes fillIn{from{clip-path:circle(18% at 50% 70%)}to{clip-path:circle(150% at 50% 50%)}}
+.wipe{position:fixed;inset:0;z-index:100;background:radial-gradient(circle,var(--rose),var(--bordo));pointer-events:none}
+
+/* ===== SON EKRAN ===== */
+#s2 h2{font-style:italic;font-weight:400;font-size:clamp(1.9rem,9.5vw,3rem);line-height:1.12;color:var(--bordo);text-shadow:0 2px 16px rgba(255,255,255,.9)}
+#s2 p.msg{margin-top:14px;font-size:1.08rem;line-height:1.65;color:var(--bordo2)}
+.frame-wrap{position:relative;margin:26px auto 0;width:min(84vw,360px)}
+.frame{position:relative;aspect-ratio:3/4;border-radius:30px;border:8px solid var(--white);overflow:hidden;
+  background:linear-gradient(160deg,var(--cream),var(--pink));
+  box-shadow:0 0 0 2px var(--rose),0 18px 50px rgba(123,30,58,.35),0 0 60px rgba(255,255,255,.8);
+  opacity:0;transform:scale(.5)}
+.show .frame{animation:zoomIn 1.6s cubic-bezier(.2,.9,.25,1) .9s forwards}
+@keyframes zoomIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+/* >>> FOTOĞRAF: aynı klasördeki bizim-fotografimiz.jpg dosyası kullanılır <<< */
+.frame img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;font-size:.95rem;color:var(--bordo2)}
+.ph i{font-size:3.2rem;font-style:normal}
+.frame.empty img{display:none}.frame.empty .ph{display:flex}
+.frame-wrap .sp{position:absolute;color:#fff;text-shadow:0 0 8px #fff,0 0 16px var(--rose);animation:twinkle 2.6s ease-in-out infinite}
+.caption{margin-top:26px;font-size:1.25rem;font-style:italic;color:var(--bordo);opacity:0}
+.show .caption{animation:rv 1.4s ease 2.4s forwards}
+#s2 .t1{opacity:0}.show .t1{animation:rv 1.6s ease .2s forwards}
+#s2 .t2{opacity:0}.show .t2{animation:rv 1.6s ease .6s forwards}
+.burst{position:fixed;z-index:60;pointer-events:none;animation:burst 2.4s ease-out forwards}
+@keyframes burst{0%{opacity:1;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--bx),var(--by)) scale(1.2)}}
+
+@media (max-height:620px){.lead{margin-top:10px}#q{margin-top:14px;min-height:3.6em}}
+@media (prefers-reduced-motion:reduce){.fl,.tw,.yes{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<!-- ===== 1. EKRAN: AFFETME SORUSU ===== -->
+<section class="screen" id="s1">
+  <div class="inner">
+    <h1 class="name-in">Baharııım ❤️</h1>
+    <p class="lead rv" style="animation-delay:1.6s">
+      <b>Her şeyim, hayatımın en güzel yanı...</b>
+      Belki seni üzdüm, belki kalbini kırdım. Ama bilmeni isterim ki sen benim için çok değerlisin. Seni kaybetmek istemiyorum. Bir şans daha verir misin?
+    </p>
+    <div id="q" class="rv" style="animation-delay:3s"><span>Baharım, her şeyim... Beni affeder misin? ❤️</span></div>
+    <div class="choices rv" id="choices" data-stage="0" style="animation-delay:3.8s">
+      <button class="btn yes" id="yes" type="button">❤️ EVET<span class="yes-msg" id="yesMsg"></span></button>
+      <button class="btn no" id="no" type="button">HAYIR</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. EKRAN: İYİ Kİ VARSIN ===== -->
+<section class="screen" id="s2">
+  <div class="inner">
+    <h2 class="t1">İYİ Kİ VARSIN BAHARIM! ❤️</h2>
+    <p class="msg t2">Benim en güzel tesadüfüm, en güzel hikâyem sensin. Seni çok seviyorum. İyi ki hayatımdasın, iyi ki benimlesin. ❤️</p>
+    <div class="frame-wrap" id="fw">
+      <div class="frame" id="frame">
+        <img src="bizim-fotografimiz.jpg" alt="Bahar ve ben" id="photo">
+        <div class="ph"><i>❤</i><span>bizim-fotografimiz.jpg<br>dosyasını index.html ile aynı klasöre koy</span></div>
+      </div>
+    </div>
+    <p class="caption">Birlikte nice güzel anılara... ❤️</p>
+  </div>
+</section>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var rnd=function(a,b){return a+Math.random()*(b-a)};
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ----- Arka plan: süzülen kalpler ve parıltılar ----- */
+  var bg=$('bg'), hearts=['❤','♥','♡'], cols=['#c2185b','#e57391','#7b1e3a','#f08aa5','#fff'];
+  for(var i=0;i<18;i++){
+    var h=document.createElement('span'); h.className='fl';
+    h.textContent=hearts[i%hearts.length];
+    h.style.left=rnd(0,96)+'%'; h.style.fontSize=rnd(12,30)+'px'; h.style.color=cols[i%cols.length];
+    h.style.animationDuration=rnd(11,22)+'s'; h.style.animationDelay=(-rnd(0,20))+'s';
+    h.style.setProperty('--dx',rnd(-40,40)+'px'); h.style.setProperty('--r',rnd(-40,40)+'deg'); h.style.setProperty('--o',rnd(.25,.6));
+    bg.appendChild(h);
+  }
+  for(var j=0;j<14;j++){
+    var s=document.createElement('span'); s.className='tw'; s.textContent='✦';
+    s.style.left=rnd(2,96)+'%'; s.style.top=rnd(3,95)+'%'; s.style.fontSize=rnd(8,16)+'px';
+    s.style.animationDelay=rnd(0,3.2)+'s'; s.style.animationDuration=rnd(2.4,4.4)+'s';
+    bg.appendChild(s);
+  }
+
+  /* ----- HAYIR / EVET mantığı ----- */
+  var msgs=[
+    'Emin misin Baharım?',
+    'Ama ben gerçekten gönlünü almak istiyorum...',
+    'Hadi ama sevgilim, bir şans daha ver bana ❤️',
+    'Son kez soruyorum güzelim... Beni affeder misin?'
+  ];
+  var stage=0, choices=$('choices'), q=$('q'), done=false;
+
+  function setMsg(t){ q.innerHTML=''; var sp=document.createElement('span'); sp.textContent=t; q.appendChild(sp); }
+
+  $('no').addEventListener('click',function(){
+    if(stage>=4) return;
+    stage++;
+    setMsg(msgs[stage-1]);
+    choices.setAttribute('data-stage',stage);
+    if(stage===4){ $('yesMsg').textContent=msgs[3]; }
+  });
+
+  $('yes').addEventListener('click',function(){
+    if(done) return; done=true;
+    var w=document.createElement('div'); w.className='wipe'; document.body.appendChild(w);
+    var dur=reduce?10:1000;
+    var a=w.animate([{clipPath:'circle(0% at 50% 60%)'},{clipPath:'circle(150% at 50% 60%)'}],{duration:dur,easing:'ease-in',fill:'forwards'});
+    a.onfinish=function(){
+      $('s1').style.display='none';
+      var s2=$('s2'); s2.style.display='flex'; window.scrollTo(0,0);
+      requestAnimationFrame(function(){
+        s2.classList.add('show');
+        w.animate([{opacity:1},{opacity:0}],{duration:reduce?10:1200,fill:'forwards'}).onfinish=function(){w.remove()};
+        setTimeout(burst,1500); setTimeout(burst,2600);
+      });
+    };
+  });
+
+  /* ----- Fotoğraf bulunamazsa yer tutucu göster ----- */
+  var img=$('photo'), fr=$('frame');
+  img.addEventListener('error',function(){fr.classList.add('empty')});
+  if(img.complete && img.naturalWidth===0){fr.classList.add('empty')}
+
+  /* ----- Fotoğraf çevresi parıltıları ----- */
+  var fw=$('fw'), pos=[[-6,8],[96,4],[-8,52],[98,48],[2,96],[90,98],[46,-4],[50,100]];
+  pos.forEach(function(p,i){
+    var s=document.createElement('span'); s.className='sp'; s.textContent=i%2?'✦':'❤';
+    s.style.left=p[0]+'%'; s.style.top=p[1]+'%'; s.style.fontSize=rnd(12,22)+'px';
+    if(i%2===0) s.style.color='#e57391';
+    s.style.animationDelay=(2+i*.3)+'s'; fw.appendChild(s);
+  });
+
+  /* ----- Fotoğraftan uçan kalpler ----- */
+  function burst(){
+    var r=fr.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+    for(var i=0;i<22;i++){
+      var b=document.createElement('span'); b.className='burst'; b.textContent=hearts[i%hearts.length];
+      b.style.left=cx+'px'; b.style.top=cy+'px'; b.style.fontSize=rnd(14,30)+'px'; b.style.color=cols[i%cols.length];
+      var ang=rnd(0,Math.PI*2), d=rnd(80,200);
+      b.style.setProperty('--bx',Math.cos(ang)*d+'px'); b.style.setProperty('--by',(Math.sin(ang)*d-60)+'px');
+      b.style.animationDelay=rnd(0,.5)+'s';
+      document.body.appendChild(b); setTimeout(function(el){el.remove()}.bind(null,b),3200);
+    }
+  }
+})();
+</script>
+</body>
+</html>
